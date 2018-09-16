@@ -1,7 +1,9 @@
 class Sorter {
     constructor() {
         this.storage = [];
-        this.sortItems = [];
+        this.sorting = function(elem_a, elem_b){
+            return elem_a - elem_b;
+        }
     }
 
     add(element) {
@@ -21,29 +23,28 @@ class Sorter {
     }
 
     sort(indices) {
-        let sort_item = this.sortItems;
-        let storage = this.storage;
+        var sortItems = [];
 
-        indices.forEach(function(index){
-            sort_item.push(storage[index]);
-            storage.splice(index, 1, true);
-        });
+        for(var i = 0; i < indices.length; i++){
+            sortItems.push( this.storage[ indices[i] ] );
+            this.storage[ indices[i] ] = true;
+        }
 
-        sort_item.sort(function(a,b){
-            return a - b;
-        });
+        sortItems.sort(this.sorting); //[5, 10]
 
-        for(let i = 0; i < storage.length; i++){
-            if(storage[i] === true){
-                storage[i] = sort_item[0];
-                sort_item.splice(0, 1);
+        for(var i = 0; i < this.storage.length; i++){
+            if(this.storage[i] === true){
+                this.storage[i] = sortItems[0];
+                sortItems.splice(0, 1);
             }
         }
-        return storage;
+
+        return this.storage;
+
     }
 
     setComparator(compareFunction) {
-        // your implementation
+        this.sorting = compareFunction;
     }
 }
 
